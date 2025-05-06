@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+
+<ruleset name="Custom Rules"
+    xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+    <description>
+        A customized PMD ruleset for software metrics: LoC, CC, WMC, CBO, LCOM
+    </description>
+
+    <!-- ==================== -->
+    <!-- 1. Lines of Code (LoC) -->
+    <!-- ==================== -->
+    <rule ref="category/java/design.xml/NcssCount">
+        <properties>
+            <property name="methodReportLevel" value="60" />
+            <property name="classReportLevel" value="1500" />
+        </properties>
+    </rule>
+
+    <!-- ==================== -->
+    <!-- 2. Cyclomatic Complexity (CC) -->
+    <!-- ==================== -->
+    <rule ref="category/java/design.xml/CyclomaticComplexity">
+        <properties>
+            <property name="classReportLevel" value="15"/> <!-- threshold -->
+            <property name="methodReportLevel" value="10"/> 
+        </properties>
+    </rule>
+
+    <!-- ==================== -->
+    <!-- 3. Weighted Methods per Class (WMC) -->
+    <!-- ==================== -->
+    <rule ref="category/java/design.xml/TooManyMethods">
+        <properties>
+            <property name="maxmethods" value="20"/> <!-- warn if above 20 -->
+        </properties>
+    </rule>
+
+    <!-- ==================== -->
+    <!-- 4. Coupling Between Objects (CBO) -->
+    <!-- ==================== -->
+    <rule ref="category/java/design.xml/CouplingBetweenObjects">
+        <properties>
+            <property name="threshold" value="10"/> <!-- warn if above 10 -->
+        </properties>
+    </rule>
+
+    <!-- ==================== -->
+    <!-- 5. Lack of Cohesion in Methods (LCOM) -->
+    <!-- ==================== -->
+    <rule ref="category/java/design.xml/GodClass">
+        <properties>
+        </properties>
+    </rule>
+</ruleset>

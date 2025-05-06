@@ -34,4 +34,41 @@ public class TestJpa extends BaseTransactionalTest {
         userDao.delete("testJpa", user.getId());
         TransactionUtil.commit();
     }
+
+    @Test
+    public void testCreateAndUpdateUser() throws Exception {
+        UserDao userDao = new UserDao();
+        User user = createUser("testCreateAndUpdate");
+
+        TransactionUtil.commit();
+
+        // Update user
+        user.setEmail("updated@docs.com");
+        userDao.update(user, "testCreateAndUpdate");
+        TransactionUtil.commit();
+
+        // Verify update
+        User updatedUser = userDao.getById(user.getId());
+        Assert.assertNotNull(updatedUser);
+        Assert.assertEquals("updated@docs.com", updatedUser.getEmail());
+    }
+
+    @Test
+    public void testDeleteNonExistentUser() throws Exception {
+        UserDao userDao = new UserDao();
+
+        // Attempt to delete a non-existent user
+        userDao.delete("testDeleteNonExistent", "non-existent-id");
+        TransactionUtil.commit();
+
+        // No exception means success
+    }
+
+    @Test
+    public void testAuthenticateInvalidUser() {
+        InternalAuthenticationHandler authHandler = new InternalAuthenticationHandler();
+
+        // Attempt to authenticate with invalid credentials
+        Assert.assertNull(authHandler.authenticate("invalidUser", "wrongPassword"));
+    }
 }
