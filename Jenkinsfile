@@ -6,6 +6,7 @@ pipeline {
     }
 
     environment { 
+        PATH = "/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
         // define environment variable 
         // Jenkins credentials configuration 
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub_credentials') // Docker Hub credentials ID store in Jenkins 
