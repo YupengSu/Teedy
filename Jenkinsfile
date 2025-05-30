@@ -36,6 +36,9 @@ pipeline {
         } 
         // Uploading Docker images into Docker Hub 
         stage('Upload image') { 
+            environment {
+                PATH = "/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+            }
             steps { 
                 script { 
                     // sign in Docker Hub 
