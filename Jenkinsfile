@@ -14,14 +14,6 @@ pipeline {
         DOCKER_TAG = "${env.BUILD_NUMBER}" // use build number as tag 
     } 
     stages { 
-        stage('Setup Docker CLI') {
-            steps {
-                script {
-                    def dockerHome = tool name: 'default-docker', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'
-                    env.PATH = "${dockerHome}/bin:${env.PATH}"
-                }
-            }
-        }
         stage('Build') { 
             steps { 
                 checkout scmGit( 
