@@ -8,7 +8,6 @@ pipeline {
         // 将 minikube 的路径添加到 Jenkins 的 PATH 中
         PATH = "/opt/homebrew/bin:${env.PATH}"
     }
-    }
 
     stages {
         stage('Start Minikube') {
