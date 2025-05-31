@@ -1,8 +1,8 @@
 pipeline {
     agent any
     environment {
-        DEPLOYMENT_NAME =  'teedy'
-        CONTAINER_NAME = 'teedy-ypsu'
+        DEPLOYMENT_NAME =  'hello-node'
+        CONTAINER_NAME = 'teedy'
         IMAGE_NAME = 'yupengsu/teedy:latest'
 
         // 将 minikube 的路径添加到 Jenkins 的 PATH 中
