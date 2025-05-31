@@ -52,15 +52,19 @@ pipeline {
             }
         }
 
-        stage('Run Docker Container') {
+        stage('Run Docker Containers') {
             steps {
                 script {
-                    sh '''
-                        docker stop teedy-container-8081 || true
-                        docker rm teedy-container-8081 || true
-                        docker run --name teedy-container-8081 -d -p 8081:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
-                        docker ps --filter "name=teedy-container"
-                    '''
+                    def ports = [8081, 8082, 8083]
+                    for (port in ports) {
+                        sh """
+                            docker stop teedy-container-${port} || true
+                            docker rm teedy-container-${port} || true
+                            docker run --name teedy-container-${port} -d -p ${port}:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        """
+                    }
+
+                    sh 'docker ps --filter "name=teedy-container"'
                 }
             }
         }
