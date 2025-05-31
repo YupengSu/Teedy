@@ -5,71 +5,64 @@ pipeline {
         maven 'default-maven'
     }
 
-    environment { 
-        // define environment variable 
+    environment {
         PATH = "/usr/local/bin:$PATH"
-        // Jenkins credentials configuration 
-        DOCKER_HUB_CREDENTIALS = 'dockerhub_credentials' // Docker Hub credentials ID store in Jenkins 
-        // Docker Hub Repository's name 
-        DOCKER_IMAGE = 'yupengsu/teedy' // your Docker Hub user name and Repository's name 
-        DOCKER_TAG = "${env.BUILD_NUMBER}" // use build number as tag 
-    } 
-    stages { 
-        sh 'docker context use default || true'
-        
-        stage('Build') { 
-            steps { 
-                checkout scmGit( 
-                    branches: [[name: '*/master']],  
-                    extensions: [],  
-                    userRemoteConfigs: [[url: 'https://github.com/YupengSu/Teedy.git']] // your github Repository 
-                ) 
-                sh 'mvn -B -DskipTests clean package' 
-            } 
-        } 
-        // Building Docker images 
-        stage('Building image') { 
-            steps { 
-                script { 
-                    // assume Dockerfile locate at root  
-                    docker.build("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}") 
-                } 
-            } 
-        } 
-        // Uploading Docker images into Docker Hub 
-        stage('Upload image') { 
-            environment {
-                PATH = "/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin"
+        DOCKER_HUB_CREDENTIALS = 'dockerhub_credentials'
+        DOCKER_IMAGE = 'yupengsu/teedy'
+        DOCKER_TAG = "${env.BUILD_NUMBER}"
+    }
+
+    stages {
+
+        stage('Switch Docker Context') {
+            steps {
+                sh 'docker context use default || true'
             }
-            steps { 
-                script { 
-                    // sign in Docker Hub 
-                    docker.withRegistry('https://registry.hub.docker.com', DOCKER_HUB_CREDENTIALS) { 
-                        // push image 
-                        docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").push() 
-                        // ：optional: label latest 
-                        docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").push('latest')
-                    }
+        }
+
+        stage('Build') {
+            steps {
+                checkout scmGit(
+                    branches: [[name: '*/master']],
+                    extensions: [],
+                    userRemoteConfigs: [[url: 'https://github.com/YupengSu/Teedy.git']]
+                )
+                sh 'mvn -B -DskipTests clean package'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
                 }
             }
         }
 
-        // Running Docker container 
-        stage('Run containers') { 
-            steps { 
-                script { 
-                // stop then remove containers if exists 
-                sh 'docker stop teedy-container-8081 || true' 
-                sh 'docker rm teedy-container-8081 || true' 
-                // run Container 
-                docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").run( 
-                    '--name teedy-container-8081 -d -p 8081:8080' 
-                ) 
-                    
-                // Optional: list all teedy-containers 
-                sh 'docker ps --filter "name=teedy-container"' 
-                } 
-            } 
-        } 
-    } 
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: "${DOCKER_HUB_CREDENTIALS}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh '''
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                        docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest
+                        docker push ${DOCKER_IMAGE}:latest
+                    '''
+                }
+            }
+        }
+
+        stage('Run Docker Container') {
+            steps {
+                script {
+                    sh '''
+                        docker stop teedy-container-8081 || true
+                        docker rm teedy-container-8081 || true
+                        docker run --name teedy-container-8081 -d -p 8081:8080 ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        docker ps --filter "name=teedy-container"
+                    '''
+                }
+            }
+        }
+    }
 }
