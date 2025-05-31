@@ -15,6 +15,8 @@ pipeline {
         DOCKER_TAG = "${env.BUILD_NUMBER}" // use build number as tag 
     } 
     stages { 
+        sh 'docker context use default || true'
+        
         stage('Build') { 
             steps { 
                 checkout scmGit( 
