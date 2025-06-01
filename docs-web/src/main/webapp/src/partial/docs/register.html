@@ -1,0 +1,46 @@
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{ 'register.title' | translate }}</h3>
+      </div>
+      <div class="panel-body">
+        <form name="registerForm" ng-submit="register()" novalidate>
+          <div class="form-group" ng-class="{ 'has-error': !registerForm.username.$valid && registerForm.$dirty, success: registerForm.username.$valid }">
+            <label for="inputUsername">{{ 'register.username' | translate }}</label>
+            <input type="text" class="form-control" id="inputUsername" name="username" ng-model="user.username" required ng-minlength="3" ng-maxlength="50" ng-pattern="/^[a-zA-Z0-9]+$/">
+            <span class="help-block" ng-show="registerForm.username.$error.required && registerForm.$dirty">{{ 'validation.required' | translate }}</span>
+            <span class="help-block" ng-show="registerForm.username.$error.minlength && registerForm.$dirty">{{ 'validation.too_short' | translate }}</span>
+            <span class="help-block" ng-show="registerForm.username.$error.maxlength && registerForm.$dirty">{{ 'validation.too_long' | translate }}</span>
+            <span class="help-block" ng-show="registerForm.username.$error.pattern && registerForm.$dirty">{{ 'validation.no_space' | translate }}</span>
+          </div>
+
+          <div class="form-group" ng-class="{ 'has-error': !registerForm.email.$valid && registerForm.$dirty, success: registerForm.email.$valid }">
+            <label for="inputEmail">{{ 'register.email' | translate }}</label>
+            <input type="email" class="form-control" id="inputEmail" name="email" ng-model="user.email" required>
+            <span class="help-block" ng-show="registerForm.email.$error.required && registerForm.$dirty">{{ 'validation.required' | translate }}</span>
+            <span class="help-block" ng-show="registerForm.email.$error.email && registerForm.$dirty">{{ 'validation.email' | translate }}</span>
+          </div>
+
+          <div class="form-group" ng-class="{ 'has-error': !registerForm.password.$valid && registerForm.$dirty, success: registerForm.password.$valid }">
+            <label for="inputPassword">{{ 'register.password' | translate }}</label>
+            <input type="password" class="form-control" id="inputPassword" name="password" ng-model="user.password" required ng-minlength="8" ng-maxlength="50">
+            <span class="help-block" ng-show="registerForm.password.$error.required && registerForm.$dirty">{{ 'validation.required' | translate }}</span>
+            <span class="help-block" ng-show="registerForm.password.$error.minlength && registerForm.$dirty">{{ 'validation.too_short' | translate }}</span>
+            <span class="help-block" ng-show="registerForm.password.$error.maxlength && registerForm.$dirty">{{ 'validation.too_long' | translate }}</span>
+          </div>
+
+          <div class="form-group" ng-class="{ 'has-error': !registerForm.passwordConfirm.$valid && registerForm.$dirty, success: registerForm.passwordConfirm.$valid }">
+            <label for="inputPasswordConfirm">{{ 'register.password_confirm' | translate }}</label>
+            <input type="password" class="form-control" id="inputPasswordConfirm" name="passwordConfirm" ng-model="user.passwordConfirm" required compare-to="user.password">
+            <span class="help-block" ng-show="registerForm.passwordConfirm.$error.required && registerForm.$dirty">{{ 'validation.required' | translate }}</span>
+            <span class="help-block" ng-show="registerForm.passwordConfirm.$error.compareTo && registerForm.$dirty">{{ 'validation.password_confirm' | translate }}</span>
+          </div>
+
+          <button type="submit" class="btn btn-primary" ng-disabled="!registerForm.$valid">{{ 'register.submit' | translate }}</button>
+          <a href="#/login" class="btn btn-link">{{ 'register.back_to_login' | translate }}</a>
+        </form>
+      </div>
+    </div>
+  </div>
+</div> 

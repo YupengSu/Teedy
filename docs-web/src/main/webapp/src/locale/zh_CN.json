@@ -14,7 +14,8 @@
     "password_lost_sent_title": "密码重置邮件已发送",
     "password_lost_sent_message": "重置密码的邮件已经发送至<strong>{{ username }}</strong>",
     "password_lost_error_title": "密码重置出错",
-    "password_lost_error_message": "无法发送密码重置邮件，请联系您的管理员进行手动重置"
+    "password_lost_error_message": "无法发送密码重置邮件，请联系您的管理员进行手动重置",
+    "register": "注册新用户"
   },
   "passwordlost": {
     "title": "丢失密码",
@@ -401,6 +402,21 @@
       "value": "值",
       "order": "顺序",
       "new_entry": "新输入"
+    },
+    "registration": {
+      "title": "注册请求",
+      "pending_requests": "待处理的注册请求",
+      "username": "用户名",
+      "email": "电子邮件",
+      "created_date": "创建日期",
+      "actions": "操作",
+      "approve": "批准",
+      "reject": "拒绝",
+      "no_requests": "没有待处理的注册请求",
+      "approve_confirm_title": "批准注册请求",
+      "approve_confirm_message": "您确定要批准用户 {{ username }} 的注册请求吗？",
+      "reject_confirm_title": "拒绝注册请求",
+      "reject_confirm_message": "您确定要拒绝用户 {{ username }} 的注册请求吗？"
     }
   },
   "feedback": {
@@ -507,5 +523,18 @@
   "loading": "加载中...",
   "send": "发送",
   "enabled": "激活",
-  "disabled": "未激活"
+  "disabled": "未激活",
+  "register": {
+    "title": "注册新用户",
+    "username": "用户名",
+    "email": "电子邮件",
+    "password": "密码",
+    "password_confirm": "确认密码",
+    "submit": "提交注册请求",
+    "back_to_login": "返回登录",
+    "success_title": "注册请求已提交",
+    "success_message": "您的注册请求已提交成功。请等待管理员审核。",
+    "error_title": "注册失败",
+    "error_username_exists": "该用户名已被使用，请选择其他用户名。"
+  }
 }

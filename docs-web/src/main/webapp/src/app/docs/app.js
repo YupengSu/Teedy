@@ -110,6 +110,20 @@ angular.module('docs',
         }
       }
     })
+    .state('settings.registration', {
+      url: '/registration',
+      views: {
+        'settings': {
+          templateUrl: 'partial/docs/settings.registration.html',
+          controller: 'SettingsRegistration'
+        }
+      },
+      resolve: {
+        init: ['$rootScope', function($rootScope) {
+          $rootScope.pageTitle = 'settings.registration.title';
+        }]
+      }
+    })
     .state('settings.fileimporter', {
       url: '/fileimporter',
       views: {
@@ -361,6 +375,15 @@ angular.module('docs',
         'page': {
           templateUrl: 'partial/docs/login.html',
           controller: 'Login'
+        }
+      }
+    })
+    .state('register', {
+      url: '/register',
+      views: {
+        'page': {
+          templateUrl: 'partial/docs/register.html',
+          controller: 'Register'
         }
       }
     })

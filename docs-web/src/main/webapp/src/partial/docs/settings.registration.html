@@ -1,0 +1,49 @@
+<div class="row">
+  <div class="col-md-12">
+    <h1 class="page-header">
+      <span class="fas fa-user-plus"></span> {{ 'settings.registration.title' | translate }}
+    </h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{ 'settings.registration.pending_requests' | translate }}</h3>
+      </div>
+      <div class="panel-body">
+        <div class="table-responsive">
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th>{{ 'settings.registration.username' | translate }}</th>
+                <th>{{ 'settings.registration.email' | translate }}</th>
+                <th>{{ 'settings.registration.created_date' | translate }}</th>
+                <th>{{ 'settings.registration.actions' | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="request in pendingRequests">
+                <td>{{ request.username }}</td>
+                <td>{{ request.email }}</td>
+                <td>{{ request.create_date | date:'medium' }}</td>
+                <td>
+                  <button class="btn btn-success btn-sm" ng-click="approveRequest(request)">
+                    <span class="fas fa-check"></span> {{ 'settings.registration.approve' | translate }}
+                  </button>
+                  <button class="btn btn-danger btn-sm" ng-click="rejectRequest(request)">
+                    <span class="fas fa-times"></span> {{ 'settings.registration.reject' | translate }}
+                  </button>
+                </td>
+              </tr>
+              <tr ng-if="!pendingRequests.length">
+                <td colspan="4" class="text-center">{{ 'settings.registration.no_requests' | translate }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

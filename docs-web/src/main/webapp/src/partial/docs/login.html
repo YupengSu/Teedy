@@ -79,6 +79,12 @@
           <button type="submit" class="btn btn-default btn-block" ng-if="app.guest_login" ng-click="loginAsGuest()">
             <span class="fas fa-user"></span> {{ 'login.login_as_guest' | translate }}
           </button>
+
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary" ng-disabled="!loginForm.$valid">{{ 'login.submit' | translate }}</button>
+            <a href="#/register" class="btn btn-link">{{ 'login.register' | translate }}</a>
+            <a href="#/passwordlost" class="btn btn-link">{{ 'login.password_lost_btn' | translate }}</a>
+          </div>
         </form>
       </div>
     </div>
