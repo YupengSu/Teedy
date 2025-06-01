@@ -204,6 +204,20 @@ angular.module('docs',
         }
       }
     })
+    .state('settings.user_activity', {
+      url: '/user_activity',
+      views: {
+        'settings': {
+          templateUrl: 'partial/docs/settings.user.activity.html',
+          controller: 'SettingsUserActivity'
+        }
+      },
+      resolve: {
+        init: ['$rootScope', function($rootScope) {
+          $rootScope.pageTitle = 'settings.user_activity.title';
+        }]
+      }
+    })
     .state('settings.workflow.edit', {
       url: '/edit/:id',
       views: {

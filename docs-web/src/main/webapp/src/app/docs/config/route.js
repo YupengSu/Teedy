@@ -22,4 +22,35 @@
       $rootScope.pageTitle = 'register.title';
     }]
   }
+})
+
+.state('settings.ldap', {
+  url: '/ldap',
+  views: {
+    'settings': {
+      templateUrl: 'partial/docs/settings.ldap.html',
+      controller: 'SettingsLdap'
+    }
+  }
+})
+
+.state('settings.monitoring', {
+  url: '/monitoring',
+  views: {
+    'settings': {
+      templateUrl: 'partial/docs/settings.monitoring.html',
+      controller: 'SettingsMonitoring'
+    }
+  }
+})
+
+.state('document', {
+  url: '/document',
+  templateUrl: 'partial/docs/document.html',
+  controller: 'Document',
+  resolve: {
+    init: ['$rootScope', function($rootScope) {
+      $rootScope.pageTitle = 'document.title';
+    }]
+  }
 }) 

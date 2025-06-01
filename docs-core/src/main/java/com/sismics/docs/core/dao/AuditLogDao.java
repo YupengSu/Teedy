@@ -53,30 +53,46 @@ public class AuditLogDao {
         StringBuilder baseQuery = new StringBuilder("select l.LOG_ID_C c0, l.LOG_CREATEDATE_D c1, u.USE_USERNAME_C c2, l.LOG_IDENTITY_C c3, l.LOG_CLASSENTITY_C c4, l.LOG_TYPE_C c5, l.LOG_MESSAGE_C c6 from T_AUDIT_LOG l ");
         baseQuery.append(" join T_USER u on l.LOG_IDUSER_C = u.USE_ID_C ");
         List<String> queries = Lists.newArrayList();
-        
+        List<String> conditions = Lists.newArrayList();
+
         // Adds search criteria
         if (criteria.getDocumentId() != null) {
             // ACL on document is not checked here, rights have been checked before
-            queries.add(baseQuery + " where l.LOG_IDENTITY_C = :documentId ");
-            queries.add(baseQuery + " where l.LOG_IDENTITY_C in (select f.FIL_ID_C from T_FILE f where f.FIL_IDDOC_C = :documentId) ");
-            queries.add(baseQuery + " where l.LOG_IDENTITY_C in (select c.COM_ID_C from T_COMMENT c where c.COM_IDDOC_C = :documentId) ");
-            queries.add(baseQuery + " where l.LOG_IDENTITY_C in (select a.ACL_ID_C from T_ACL a where a.ACL_SOURCEID_C = :documentId) ");
-            queries.add(baseQuery + " where l.LOG_IDENTITY_C in (select r.RTE_ID_C from T_ROUTE r where r.RTE_IDDOCUMENT_C = :documentId) ");
+            conditions.add("(l.LOG_IDENTITY_C = :documentId OR l.LOG_IDENTITY_C in (select f.FIL_ID_C from T_FILE f where f.FIL_IDDOC_C = :documentId) OR l.LOG_IDENTITY_C in (select c.COM_ID_C from T_COMMENT c where c.COM_IDDOC_C = :documentId) OR l.LOG_IDENTITY_C in (select a.ACL_ID_C from T_ACL a where a.ACL_SOURCEID_C = :documentId) OR l.LOG_IDENTITY_C in (select r.RTE_ID_C from T_ROUTE r where r.RTE_IDDOCUMENT_C = :documentId))");
             parameterMap.put("documentId", criteria.getDocumentId());
         }
         
-        if (criteria.getUserId() != null) {
-            if (criteria.isAdmin()) {
-                // For admin users, display all logs except ACL logs
-                queries.add(baseQuery + " where l.LOG_CLASSENTITY_C != 'Acl' ");
-            } else {
-                // Get all logs originating from the user, not necessarly on owned items
-                // Filter out ACL logs
-                queries.add(baseQuery + " where l.LOG_IDUSER_C = :userId and l.LOG_CLASSENTITY_C != 'Acl' ");
-                parameterMap.put("userId", criteria.getUserId());
-            }
+        if (criteria.getUserId() != null && !criteria.isAdmin()) {
+            // Get all logs originating from the user, not necessarly on owned items
+            // Filter out ACL logs
+            conditions.add("l.LOG_IDUSER_C = :userId and l.LOG_CLASSENTITY_C != 'Acl'");
+            parameterMap.put("userId", criteria.getUserId());
+        } else if (criteria.isAdmin()) {
+            // For admin users, display all logs, add a true condition
+            conditions.add("1 = 1");
         }
-        
+
+        // Add date range filtering
+        if (criteria.getStartDate() != null) {
+            conditions.add("l.LOG_CREATEDATE_D >= :startDate");
+            parameterMap.put("startDate", criteria.getStartDate());
+        }
+        if (criteria.getEndDate() != null) {
+            conditions.add("l.LOG_CREATEDATE_D <= :endDate");
+            parameterMap.put("endDate", criteria.getEndDate());
+        }
+
+        // Construct the final query
+        StringBuilder finalQuery = new StringBuilder(baseQuery);
+        if (!conditions.isEmpty()) {
+            finalQuery.append(" where ").append(Joiner.on(" and ").join(conditions));
+        }
+        queries.add(finalQuery.toString());
+
+        // >>> 添加日志输出，打印生成的 SQL 查询和参数
+        System.out.println("Generated SQL Query: " + Joiner.on(" union ").join(queries));
+        System.out.println("Query Parameters: " + parameterMap);
+
         // Perform the search
         QueryParam queryParam = new QueryParam(Joiner.on(" union ").join(queries), parameterMap);
         List<Object[]> l = PaginatedLists.executePaginatedQuery(paginatedList, queryParam, sortCriteria);

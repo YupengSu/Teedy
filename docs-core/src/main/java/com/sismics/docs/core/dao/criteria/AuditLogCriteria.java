@@ -1,5 +1,6 @@
 package com.sismics.docs.core.dao.criteria;
 
+import java.util.Date;
 
 /**
  * Audit log criteria.
@@ -21,6 +22,16 @@ public class AuditLogCriteria {
      * The search is done for an admin user.
      */
     private boolean isAdmin = false;
+
+    /**
+     * Start date.
+     */
+    private Date startDate;
+
+    /**
+     * End date.
+     */
+    private Date endDate;
     
     public String getDocumentId() {
         return documentId;
@@ -44,6 +55,24 @@ public class AuditLogCriteria {
 
     public AuditLogCriteria setAdmin(boolean admin) {
         isAdmin = admin;
+        return this;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public AuditLogCriteria setStartDate(Date startDate) {
+        this.startDate = startDate;
+        return this;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public AuditLogCriteria setEndDate(Date endDate) {
+        this.endDate = endDate;
         return this;
     }
 }

@@ -4,8 +4,42 @@
  * Document default controller.
  */
 angular.module('docs').controller('DocumentDefault', function ($scope, $rootScope, $state, Restangular, Upload, $translate, $uibModal, $dialog, User) {
+  // Calculate date range for the last week
+  var endDate = new Date();
+  var startDate = new Date();
+  startDate.setDate(endDate.getDate() - 7);
+
+  // Set endDate time to the end of the day
+  endDate.setHours(23, 59, 59, 999);
+
+  // Format dates to YYYY-MM-DD
+  var formatDate = function(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+  };
+
+  var startDateStr = formatDate(startDate);
+  var endDateStr = formatDate(endDate);
+
   // Load user audit log
-  Restangular.one('auditlog').get().then(function (data) {
+  // For admin users, load all user logs in the last week
+  // For non-admin users, load only their logs (default backend behavior)
+  var auditLogParams = {};
+  if ($rootScope.userInfo && $rootScope.userInfo.base_functions && $rootScope.userInfo.base_functions.indexOf('ADMIN') !== -1) {
+      auditLogParams.startDate = startDateStr;
+      auditLogParams.endDate = endDateStr;
+  }
+  
+  Restangular.one('auditlog').get(auditLogParams).then(function (data) {
     $scope.logs = data.logs;
   });
 

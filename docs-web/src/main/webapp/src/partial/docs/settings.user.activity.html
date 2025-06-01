@@ -1,0 +1,160 @@
+<div class="page-header">
+  <h1>{{ 'settings.user_activity.title' | translate }}</h1>
+</div>
+
+<div class="user-activity-dashboard">
+  <div class="alert alert-info" ng-if="loading">
+    <i class="fas fa-spinner fa-spin"></i> {{ 'common.loading' | translate }}
+  </div>
+  
+  <div class="alert alert-danger" ng-if="error">
+    <i class="fas fa-exclamation-circle"></i> {{ error }}
+  </div>
+
+  <div class="panel panel-default" ng-if="!loading && !error">
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-md-12">
+          <h3 class="panel-title">{{ 'settings.user_activity.last_week' | translate }}</h3>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+      <div class="timeline">
+        <div ng-repeat="(username, activities) in userActivitiesGrouped" class="user-section mb-4">
+          <div class="user-header">
+            <i class="fas fa-user-circle fa-2x text-primary"></i>
+            <h4 class="d-inline-block ml-2">{{ username }}</h4>
+          </div>
+          <div class="activity-cards">
+            <div ng-repeat="activity in activities" class="activity-card" ng-class="{'create': activity.type === 'CREATE', 'update': activity.type === 'UPDATE', 'delete': activity.type === 'DELETE'}">
+              <div class="card">
+                <div class="card-body">
+                  <div class="activity-header">
+                    <span class="activity-type" ng-class="{'badge-success': activity.type === 'CREATE', 'badge-info': activity.type === 'UPDATE', 'badge-danger': activity.type === 'DELETE'}">
+                      {{ 'directive.auditlog.' + activity.class | translate }}
+                      <span ng-switch="activity.type">
+                        <span ng-switch-when="CREATE">{{ 'directive.auditlog.log_created' | translate }}</span>
+                        <span ng-switch-when="UPDATE">{{ 'directive.auditlog.log_updated' | translate }}</span>
+                        <span ng-switch-when="DELETE">{{ 'directive.auditlog.log_deleted' | translate }}</span>
+                      </span>
+                    </span>
+                    <small class="text-muted ml-2">{{ activity.create_date | timeAgo }}</small>
+                  </div>
+                  <p class="card-text mt-2">{{ formatMessage(activity.message) }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.user-section {
+  position: relative;
+  padding-left: 30px;
+}
+
+.user-section:before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: #e9ecef;
+}
+
+.user-header {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.user-header:before {
+  content: '';
+  position: absolute;
+  left: -30px;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  border: 2px solid #007bff;
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.activity-cards {
+  margin-left: 20px;
+}
+
+.activity-card {
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.activity-card:before {
+  content: '';
+  position: absolute;
+  left: -20px;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  border: 2px solid #6c757d;
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.activity-card.create:before {
+  border-color: #28a745;
+}
+
+.activity-card.update:before {
+  border-color: #17a2b8;
+}
+
+.activity-card.delete:before {
+  border-color: #dc3545;
+}
+
+.activity-type {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.badge-success {
+  background-color: #28a745;
+  color: white;
+}
+
+.badge-info {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.badge-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.card {
+  border: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.activity-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+</style> 

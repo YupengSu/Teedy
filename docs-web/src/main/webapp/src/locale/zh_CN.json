@@ -393,15 +393,24 @@
       "clear_message": "该帐号的所有其他连接将终止",
       "clear": "清除所有其他会话"
     },
+    "user_activity": {
+      "title": "用户活动",
+      "last_week": "最近一个月用户活动",
+      "quarter_day": "季度",
+      "half_day": "半天",
+      "day": "天",
+      "week": "周",
+      "month": "月",
+      "no_data": "在选定日期范围内没有用户活动数据",
+      "error": "加载用户活动数据时出错"
+    },
     "vocabulary": {
       "title": "词条 <small>输入</small>",
       "choose_vocabulary": "选择一个词条编辑",
       "type": "类型",
-      "coverage": "覆盖",
-      "rights": "权利",
-      "value": "值",
-      "order": "顺序",
-      "new_entry": "新输入"
+      "name": "名称",
+      "add_option": "新增可选项",
+      "order": "顺序"
     },
     "registration": {
       "title": "注册请求",
@@ -456,7 +465,10 @@
       "Tag": "标签",
       "User": "用户",
       "RouteModel": "工作流程",
-      "Route": "工作流程"
+      "Route": "工作流程",
+      "log_CREATE": "创建",
+      "log_UPDATE": "更新",
+      "log_DELETE": "删除"
     },
     "selectrelation": {
       "typeahead": "请输入一个文档名称"
